@@ -1,0 +1,68 @@
+require "tty-pie"
+# data = [
+#   { name: "BTC", value: 5977, color: :bright_yellow, fill: "*" },
+#   { name: "BCH", value: 3045, color: :bright_green, fill: "x" },
+#   { name: "LTC", value: 2030, color: :bright_magenta, fill: "@" },
+#   { name: "ETH", value: 2350, color: :bright_cyan, fill: "+" },
+# ]
+# pie_chart = TTY::Pie.new(data: data, radius: 5)
+# print pie_chart
+
+require "tty-prompt"
+prompt = TTY::Prompt.new
+prompt.ask("what is your name?", default: ENV["USER"])
+
+# prompt.yes?(" ?")
+# prompt.yes?("?")
+# prompt.yes?("..?")
+# prompt.select(" ", )
+
+require "http"
+
+response = HTTP.get("https://data.cityofchicago.org/resource/4ijn-s7e5.json")
+
+facilities = response.parse
+pp response.parse
+
+index = 0
+restaurants = []
+index2 = 0
+while index < facilities.length
+  facility = facilities[index]
+  if facility["facility_type"] == "Restaurant"
+    pp facility["aka_name"]
+
+    restaurants << facility["aka_name"]
+  end
+  index = index + 1
+  while index2 < restaurants.length
+    pass = []
+    failing = []
+    risky = []
+    if restaurants[index]["results"] == "Pass"
+      pass << restaurants[index]
+    elsif restaurants[index]["results"] == "Fail"
+      failing << restaurants[index]
+    else
+      risky << restaurants[index]
+    end
+    index2 += 1
+  end
+end
+pp failing
+
+# "risk" => "Risk 1 (High)" / "Risk 2 (Medium)" /
+# "results" => "Pass" , "Fail"
+
+# index = 0
+# resraurants = []
+# while index < facilities.length
+#   facility = facilities[index]
+#   if facility["facility_type"] == "Restaurant"
+#     resraurants << facility["aka_name"]
+#   end
+#   if resraurants["results"] == "Pass"
+#     pp resraurants
+#   end
+#   index = index = 1
+# end
